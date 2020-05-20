@@ -1,4 +1,7 @@
 # family-media-lan
+
+![Screenshot](https://github.com/michaelfiber/family-media-lan/blob/master/screenshot.png?raw=true)
+
 ## Building
 **npm run watch** - this will trigger typescript, SASS and cpx to load everything into the dist folder. It also starts nodemon. **parallel** must be installed for that to work. I committed the finished dist folder to the repo so you don't have to do that if you don't want to.
 
