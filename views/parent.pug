@@ -1,0 +1,136 @@
+doctype html
+html
+    head
+        script(src="/fontawesome/js/all.min.js" crossorigin="anonymous")
+        meta(name="viewport" content="width=device-width, initial-scale=1, user-scalable=no")
+        title Parent's music player
+        link(rel="stylesheet" href="/bulma/css/bulma.min.css")
+        link(rel="stylesheet" href="/css/parent.css")
+        link(rel="stylesheet" href="/css/settings.css")
+        script(src="/NoSleep.min.js")
+        script(src="/socket.io/socket.io.js")
+        script(src="/stub.js")
+        script(src="/vue.js")
+        script(src="/getPrettyTimer.js")
+        script(src="/parent.js")
+    body
+        #app(@click="updateClockTimeout")
+            #show-settings-modal.modal(:class="{ 'is-active': isSettingsModalVisible }")
+                .modal-background
+                .modal-card
+                    header.modal-card-head Settings
+                    section.modal-card-body
+                        .buttons
+                            button.button.is-rounded(@click="music.isAddAlbumModalVisible = true") Add Album
+                            button.button.is-rounded(@click="music.isAddSongModalVisible = true") Add Song
+                        label.label Device Name
+                        .field.has-addons
+                            .control
+                                input.input.is-rounded.is-info(type="text" v-model="settings.clientName")
+                            .control
+                                button.button.is-rounded.is-info(@click="submitClientName") Save
+                    footer.modal-card-foot
+                        button.button.is-rounded(@click="isSettingsModalVisible = false") Close
+            #add-song-modal.modal(:class="{ 'is-active': music.isAddSongModalVisible }")
+                .modal-background
+                .modal-card
+                    header.modal-card-head Add a Song
+                    section.modal-card-body
+                        label.label Name (optional):                    
+                        .field  
+                            .control
+                                input.input.is-rounded.is-info(type="text" v-model="music.newSongName" placeholder="New song name" :disabled="music.uploading")
+                        label.label File:
+                        .field.has-addons
+                            .control
+                                input#new-song.input.is-rounded.is-info(type="file" v-model="music.newSong" :disabled="music.uploading")
+                            .control
+                                button.button.is-rounded.is-info(@click="uploadNewSong" :disabled="music.uploading") Upload
+                    footer.modal-card-foot 
+                        button.button.is-rounded(@click="music.isAddSongModalVisible = false") Close
+            #add-album-modal.modal(:class="{ 'is-active': music.isAddAlbumModalVisible }")
+                .modal-background
+                .modal-card
+                    header.modal-card-head Add an Album
+                    section.modal-card-body 
+                        .field.has-addons
+                            .control
+                                input.input.is-info.is-rounded(v-model="music.newAlbumName")
+                            .control
+                                button.button.is-info.is-rounded(@click="saveNewAlbum") Create Album
+
+                    footer.modal-card-foot
+                        button.button.is-rounded(@click="music.isAddAlbumModalVisible = false") Close
+            #child-settings-modal.modal(:class="{ 'is-active': children.isChildSettingsVisible }")
+                .modal-background
+                .modal-card
+                    header.modal-card-head Child Settings
+                    section.modal-card-body
+                        label.label Volume {{ Math.floor(children.masterVolume * 100) }}%
+                        .buttons
+                            button.button.is-rounded(@click="volumeDown") - Vol
+                            button.button.is-rounded(@click="volumeUp") + Vol
+                        .buttons
+                            button.button.is-rounded.is-danger(@click="reloadAllClients") Reload All Child Screens
+                        .buttons
+                            button.button.is-rounded(@click="pauseChildren") 
+                                span.icon
+                                    i.fas.fa-pause
+                            button.button.is-rounded(@click="unpauseChildren")
+                                span.icon
+                                    i.fas.fa-play
+                    footer.modal-card-foot
+                        button.button.is-rounded(@click="children.isChildSettingsVisible = false") Close
+            #notifications
+                .notification(v-for="notification in notifications") {{ notification }}
+            #library(:class="{ 'spaced-bottom': music.currentSong }")
+                #buttons.buttons
+                    button.button.is-rounded.is-info(@click="isSettingsModalVisible = true")
+                        span.icon
+                            i.fas.fa-cog
+                    button.button.is-rounded.is-info(@click="children.isChildSettingsVisible = true")
+                        span.icon
+                            i.fas.fa-child
+                table.table.is-fullwidth
+                    thead
+                        tr
+                            td Playlist
+                            td Album
+                            td Song
+                    tbody
+                        template(v-for="album in music.albums")
+                            tr.is-size-6(v-for="song in album.songs" :class="{ 'has-text-success': song == music.currentSong }")
+                                td
+                                    span(@click="addSongToPlaylist(song)" v-if="!song.inPlaylist" :class="{ 'has-text-info': song !== music.currentSong, 'has-text-success': song == music.currentSong }")
+                                        span.icon
+                                            i.fas.fa-square
+                                    span(@click="removeSongFromPlaylist(song)" v-if="song.inPlaylist" :class="{ 'has-text-info': song !== music.currentSong, 'has-text-success': song == music.currentSong }")
+                                        span.icon
+                                            i.fas.fa-check-square
+
+                                td {{ album.name }}
+                                td 
+                                    .song(@click="playSong(song)"  :class="{ 'has-text-info': song !== music.currentSong, 'has-text-success': song == music.currentSong }") {{ song.name }}
+            #player(v-if="music.currentSong")
+                .song-title {{ music.currentSong.name }}
+                .buttons
+                    button.button.is-rounded.is-danger(@click="previousSong")
+                        span.icon   
+                            i.fas.fa-arrow-left
+                    button.button.is-rounded.is-danger(@click="pauseSong" v-if="!music.paused")
+                        span.icon
+                            i.fas.fa-pause
+                    button.button.is-rounded.is-danger(@click="unpauseSong" v-if="music.paused")
+                        span.icon
+                            i.fas.fa-play
+                    button.button.is-rounded.is-danger(@click="stopSong")
+                        span.icon
+                            i.fas.fa-stop
+                    button.button.is-rounded.is-danger(@click="nextSong")
+                        span.icon
+                            i.fas.fa-arrow-right
+                .duration
+                    .meter-outside
+                        .meter-inside(:style="{ width: ((music.currentTime / music.currentLength) * 100) + '%' }")
+                    .readout {{ Math.floor(music.currentTime/60) }}:{{ ('00' + Math.floor(music.currentTime%60)).substr(-2) }} / {{ Math.floor(music.currentLength/60) }}:{{ ('00' + Math.floor(music.currentLength%60)).substr(-2) }}
+

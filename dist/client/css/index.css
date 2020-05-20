@@ -1,0 +1,242 @@
+:root {
+  --gutter: 10px;
+}
+
+#app {
+  display: grid;
+  grid-template-columns: 20px 1fr 20px;
+}
+
+#app > * {
+  grid-column: 2/-2;
+}
+
+#app > .full {
+  grid-column: 1/-1;
+}
+
+.hs {
+  display: grid;
+  grid-gap: 10px;
+  grid-auto-flow: column;
+  grid-auto-columns: calc(50% - var(--gutter) * 2);
+  padding: 0 20px;
+  overflow-x: scroll;
+}
+
+.song {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  padding: 1em;
+  border: 1px solid #333;
+  border-radius: 20px;
+  background-color: #e0e0e0;
+}
+
+.meta {
+  display: flex;
+  flex-direction: column;
+  margin-left: 1em;
+  flex: 2;
+  align-items: center;
+}
+
+.controls {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-evenly;
+}
+
+.song img {
+  width: 15vw;
+  height: auto;
+}
+
+#now-playing {
+  position: fixed;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  background-color: lightblue;
+  padding: 1em;
+  display: flex;
+  flex-direction: row;
+  height: 35vh;
+}
+
+#carousel {
+  height: 50vh;
+  position: fixed;
+  top: 10vh;
+  left: 0;
+  right: 0;
+}
+
+#now-playing img {
+  width: 15vw;
+  height: 15vw;
+}
+
+.meter-outside {
+  margin-top: 3em;
+  width: 50vw;
+  height: 2vw;
+  border: 4px solid white;
+  text-align: left;
+}
+
+.meter-inside {
+  height: 100%;
+  background-color: white;
+  float: left;
+  width: 0%;
+}
+
+#app {
+  margin-top: 2em;
+}
+
+@keyframes fadeOut {
+  0% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+@keyframes fadeIn {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}
+#clock {
+  animation-duration: 4s;
+  animation-name: fadeOut;
+}
+
+#clock.is-active {
+  animation-name: fadeIn;
+}
+
+#clock .time {
+  color: white;
+  font-size: 15vh;
+}
+
+#clock .modal-content {
+  text-align: center;
+  width: 80vw;
+}
+
+.modal-widget-holder {
+  position: fixed;
+  bottom: 2em;
+  right: 2em;
+  color: white;
+  font-size: 24pt;
+}
+
+.weather {
+  display: flex;
+  flex-direction: row;
+  color: white;
+  justify-content: center;
+}
+
+.weather-temp {
+  display: flex;
+  flex-direction: column;
+  color: white;
+  font-size: 3rem;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.big-temp {
+  height: 100px;
+  line-height: 100px;
+}
+
+.weather-temp .weather-feels-like {
+  font-size: 1.5rem;
+}
+
+#buzzer {
+  z-index: 100000;
+}
+
+#popups {
+  z-index: 120000;
+}
+
+#buzzer-button {
+  height: 30vh;
+}
+
+.screen-header {
+  font-size: 1.5em;
+  position: fixed;
+  height: 10vh;
+  top: 0;
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1em;
+}
+
+.screen-header > * {
+  flex-grow: 1;
+}
+
+.screen-header-left {
+  text-align: left;
+}
+
+.screen-header-title {
+  text-align: center;
+}
+
+.screen-header-right {
+  text-align: right;
+}
+
+#dialer-button {
+  position: fixed;
+  bottom: 1em;
+  left: 1em;
+}
+
+.caller-list {
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+
+.caller-list > * {
+  margin-bottom: 1em;
+}
+
+#their-video {
+  position: fixed;
+  top: 10vh;
+  right: 10vh;
+  left: 10vh;
+}
+
+#my-video {
+  position: fixed;
+  top: 5vh;
+  right: 5vw;
+  width: 200px;
+  height: auto;
+}
+
+/*# sourceMappingURL=index.css.map */

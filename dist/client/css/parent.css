@@ -1,0 +1,86 @@
+body {
+  font-size: 12px;
+}
+
+table {
+  font-size: 10px;
+}
+
+#notifications {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+
+#library {
+  overflow: hidden;
+}
+
+#library.spaced-bottom {
+  margin-bottom: 20vh;
+}
+
+#player {
+  height: 20vh;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background-color: gray;
+  padding: 1em;
+  display: flex;
+  flex-direction: column;
+  color: white;
+}
+
+.song-title {
+  color: white;
+  font-size: 150%;
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+#buttons {
+  position: fixed;
+  top: 10px;
+  right: 10px;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.meter-outside {
+  width: 90vw;
+  height: 2vw;
+  border: 2px solid white;
+}
+
+.meter-inside {
+  height: 100%;
+  background-color: white;
+  float: left;
+  width: 0%;
+}
+
+.player-left {
+  text-align: left;
+  flex-grow: 1;
+  color: white;
+}
+
+.player-right {
+  text-align: right;
+}
+
+.player-right .readout {
+  font-size: 150%;
+  color: white;
+  text-align: center;
+}
+
+#player .buttons {
+  justify-content: center;
+}
+
+/*# sourceMappingURL=parent.css.map */

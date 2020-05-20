@@ -1,0 +1,76 @@
+doctype html
+html
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1, user-scalable=no")
+        link(rel="stylesheet" href="/bulma/css/bulma.min.css")
+        link(rel="stylesheet" href="/css/admin.css")
+        script(src="/NoSleep.min.js")
+        script(src="/socket.io/socket.io.js")
+        script(src="/stub.js")
+        script(src="/vue.js")
+        script(src="/getPrettyTimer.js")
+        script(src="/admin.js")
+    body
+        #app
+            .modal(:class="{ 'is-active': loadingMessage }")
+                .modal-background
+                .modal-card
+                    header.modal-card-head
+                        p.modal-card-title Loading
+                    section.modal-card-body
+                        div {{ loadingMessage }}
+            section.section
+                .container
+                    .notification
+                        p.subtitle All Clients
+                        .buttons
+                            button.button.is-warning(@click="reloadAllClients") Reload all clients
+                            button.button(@click="showClockAllClients") Show clock on all clients
+                    .notification
+                        p.subtitle Music Controls
+                        .buttons
+                            button.button.is-success(@click="unpauseAllMusic") Unpause all music.
+                            button.button.is-danger(@click="pauseAllMusic") Pause all music.                        
+                    .notification
+                        p.subtitle Master Volume Controls (Currently: {{ Math.floor(100 * masterVolume) }}%)
+                        .buttons
+                            button.button.is-success(@click="volumeDown") Volume Down
+                            button.button.is-danger(@click="volumeUp") Volume Up
+                    .notification
+                        p.subtitle Start a Timer
+                        .field
+                            .control
+                                input.input(type="text" v-model="newTimerName" placeholder="New timer name")
+                        .field.has-addons.has-addons-fullwidth
+                            .control
+                                input.input(type="text" v-model="newTimerDuration" placeholder="New timer duration in minutes")
+                            .control
+                                button.button.is-info(@click="startTimer") Start Timer
+                        p.subtitle Running Timers
+                        .field.has-addons.has-addons-fullwidth(v-for="t in serverTimers")
+                            .control
+                                input.input(type="text" disabled="1" :value="t.name + ' - ' + getPrettyTimer(t.secondsLeft)")
+                            .control
+                                button.button.is-warning(@click="cancelTimer(t.id)") Cancel Timer
+                    .notification
+                        p.subtitle Create new Album
+                        .field
+                            .control
+                                input.input#album-image(type="file")
+                        .field.has-addons.has-addons-fullwidth
+                            .control
+                                input.input(type="text" placeholder="New Folder Name" v-model="newAlbum")
+                            .control    
+                                button.button.is-info(@click="addAlbum") Add Album 
+                    .notification
+                        p.subtitle Buzzer
+                        .buttons
+                            button.button.is-success(@click="showBuzzer" v-if="!buzzer.show") Show
+                            button.button(@click="hideBuzzer" v-if="buzzer.show") Hide
+                        .buttons
+                            button.button.is-success(@click="openBuzzer" v-if="!buzzer.open") Open
+                            button.button(@click="closeBuzzer" v-if="buzzer.open") Close
+                    .columns
+                        .column Main Content
+                        .column.is-narrow 
+                            .recent-command(v-for="command in commands") {{ command }}

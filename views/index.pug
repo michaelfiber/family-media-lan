@@ -1,0 +1,91 @@
+doctype html
+html
+    head
+        meta(name="viewport" content="width=device-width, initial-scale=1, user-scalable=no")
+        script(src="/fontawesome/js/all.min.js")
+        title Kid's music player
+        link(rel="stylesheet" href="/bulma/css/bulma.min.css")
+        link(rel="stylesheet" href="/css/index.css")
+        link(rel="stylesheet" href="/css/settings.css")
+        script(src="/NoSleep.min.js")
+        script(src="/socket.io/socket.io.js")
+        script(src="/stub.js")
+        script(src="/vue.js")
+        script(src="/pjs.min.js")
+        script(src="/getPrettyTimer.js")
+        script(src="/client.js")
+    body
+        #app(@click="updateClockTimeout")
+            #clock.modal(@click="hideClock" :class="{ 'is-active': showClock }")
+                .modal-background
+                .modal-content
+                    .time {{ time }}
+                    .weather(v-if="weather.temp")
+                        .weather-description
+                            img(v-if="weather.iconUrl" :src="weather.iconUrl")
+                            div(v-if="weather.description") {{ weather.description }}
+                        .weather-temp
+                            .big-temp {{ Math.round(weather.temp) }}°
+                            .weather-feels-like(v-if="weather.feelsLike") Feels like {{ Math.round(weather.feelsLike) }}°
+                .modal-widget-holder
+                    div(v-for="pair in widgetMessages") {{ pair[1] }}
+            .screen-header
+                .screen-header-left
+                    span(v-if="weather.temp") {{ Math.round(weather.temp) }}&deg;
+                .screen-header-title {{ clientName }}            
+                .screen-header-right {{ time }}
+            ul#carousel.hs.full
+                template(v-for="album in albums")
+                    li.song(v-for="song in album.songs") 
+                        img(:src="song.coverUrl")
+                        .meta
+                            h1.title {{ song.name }}
+                            .controls
+                                button.button.is-rounded.is-large.is-primary(@click="playSong(album, song)" v-if="currentSong !== song || (currentSong == song && paused)" :disabled="masterPause") ▶
+                                button.button.is-rounded.is-large.is-primary(@click="pauseSong()" v-if="currentSong == song && !paused" :disabled="masterPause") ▋▋
+            #now-playing(v-if="currentSong")
+                img(:src="currentSong.coverUrl")
+                .meta
+                    p.title {{ currentSong.name }}
+                    .controls
+                        button.button.is-rounded.is-large.is-primary(v-if="paused" @click="playSong(currentAlbum, currentSong)" :disabled="masterPause") ▶
+                        button.button.is-rounded.is-large.is-primary(v-if="!paused" @click="pauseSong()" :disabled="masterPause") ▋▋
+                        | &nbsp;&nbsp;
+                        button.button.is-rounded.is-large.is-danger(@click="stopSong" :disabled="masterPause") ■ 
+                    .duration
+                        .meter-outside
+                            .meter-inside(:style="{ width: ((currentTime / length) * 100) + '%' }")
+                    div songVolume: {{ volume }} masterVolume: {{ Math.floor(masterVolume * 100) }}%
+            #buzzer.modal(:class="{ 'is-active': buzzer.show }")
+                .modal-background(@click="buzz")
+                .modal-content
+                    button#buzzer-button.is-fullwidth.button.is-large.is-rounded(@click="buzz" :disabled="!buzzer.openForBuzz" :class="{ 'is-danger': !buzzer.openForBuzz, 'is-success': buzzer.openForBuzz }") BUZZ IN
+            #popups(v-if="popups.length > 0")
+                .modal.popup.is-active(v-for="popup in popups")
+                    .modal-background
+                    .modal-card
+                        header.modal-card-head
+                            p.modal-card-title Alert!
+                        section.modal-card-body
+                            p.title {{ popup.message }}
+                        footer.modal-card-foot
+                            button.button.is-info(@click="clearPopup(popup)") Dismiss
+            #settings(v-if="!fullScreenElement")
+                #settings-button.button.is-primary(@click="requestFullScreen" ) Maximize
+            button#dialer-button.button.is-rounded.is-success.is-large(v-if="settings.clientList.filter(c => c.peerId && c.clientName !== settings.clientName).length > 0" @click="settings.showDialerModal = true")
+                span.icon
+                    i.fas.fa-video
+            #dialer.modal(:class="{ 'is-active': settings.showDialerModal }")
+                .modal-background
+                .modal-card
+                    section.modal-card-body
+                        .caller-list
+                            button.button.is-success.is-rounded.is-large(v-for="client in settings.clientList.filter(c => c.peerId && c.clientName !== settings.clientName)" @click="videoCall(client.peerId)") {{ client.clientName }}
+                    footer.modal-card-foot
+                        button.button.is-rounded(@click="settings.showDialerModal = false") Close
+            #call.modal(:class="{ 'is-active': settings.call && settings.theirStream && settings.mediaStream }")
+                .modal-background
+                .modal-content
+                    video#their-video(:src-object.prop.camel="settings.theirStream" playsinline autoplay)
+                    video#my-video(:src-object.prop.camel="settings.mediaStream" playsinline autoplay)
+                    button#hang-up.button.is-danger.is-rounded.is-large(@click="hangUp") Hang Up

@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "target": "es2018",
+        "module": "commonjs",
+        "outDir": "../../dist/client",
+        "strict": true,
+        "esModuleInterop": true
+    }
+}
