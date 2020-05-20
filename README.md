@@ -13,7 +13,7 @@ MP3s are served as static files and played in a web browser. WebSockets are used
 
 Parents can also play their own separate library of music through this. The parents' portal also has a "kid" button that they can use to set the max volume of, pause/lock, and reload all kids' portals. 
 
-![Parent view](https://github.com/michaelfiber/family-media-lan/blob/master/parent-screenshot.png?raw=true)
+[Parent view](https://github.com/michaelfiber/family-media-lan/blob/master/parent-screenshot.png?raw=true)
 
 Some of my kids' songs were INSANELY loud so you can add a .vol file containing a number between 0.0 and 1.0 that sets song specific volume. It has to have the same name as the song its controlling. The same song *City Run.mp3* has a corresponding *City Run.vol* that sets its volume to 35%. The master volume set from the parent portal is applied on top of this so the final volume of the song is (volume from .vol file || 1.0) * master volume.
 
