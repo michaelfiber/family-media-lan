@@ -1,8 +1,8 @@
 {
-  "name": "kids-music-player",
-  "version": "1.0.0",
-  "description": "",
-  "main": "index.js",
+  "name": "family-media-lan",
+  "version": "0.0.1",
+  "description": "LAN based browser music player with central parental controls, gameshow buzzer, and video chat.",
+  "main": "dist/server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "watch": "parallel -j 5 -- './node_modules/.bin/cpx \"static-files/**/*\" dist --watch' 'sass --watch src:dist' './node_modules/.bin/tsc -p ./src/client/ --preserveWatchOutput --watch' './node_modules/.bin/tsc --preserveWatchOutput --watch' 'nodemon -r dotenv/config ./dist/server.js'"
