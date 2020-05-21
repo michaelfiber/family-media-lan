@@ -3,10 +3,10 @@
 ![Screenshot](https://github.com/michaelfiber/family-media-lan/blob/master/screenshot.png?raw=true)
 
 ## Building
-**npm run watch** - this will trigger typescript, SASS and cpx to load everything into the dist folder. It also starts nodemon. **parallel** must be installed for that to work. I committed the finished dist folder to the repo so you don't have to do that if you don't want to.
+`npm run watch` - this will trigger typescript, SASS and cpx to load everything into the dist folder. It also starts nodemon. `parallel` must be installed for that to work. I committed the finished dist folder to the repo so you don't have to do that if you don't want to.
 
 ## Running
-It can be started by running **node ./dist/server.js**. You can specify the port using **PORT=8080 node ./dist/server.js** or you can also make a .env file in the root directory and then run **node -r dotenv/config ./dist/server.js**.  I run it using [forever](https://www.npmjs.com/package/forever) because I've probably left something broken in it and it will probably need to restart at some point.
+It can be started by running `node ./dist/server.js`. You can specify the port using `PORT=8080 node ./dist/server.js` or you can also make a .env file in the root directory and then run `node -r dotenv/config ./dist/server.js`.  I run it using [forever](https://www.npmjs.com/package/forever) because I've probably left something broken in it and it will probably need to restart at some point.
 
 ## Features
 MP3s are served as static files and played in a web browser. WebSockets are used to allow a parent some control over what all the kids' portals are doing. WebRTC is used to let kids do video chat between kids' portals on the LAN which is a fun novelty that my kids get a kick out of at least.
