@@ -6,6 +6,8 @@
 `npm run watch` - this will trigger typescript, SASS and cpx to load everything into the dist folder. It also starts nodemon. `parallel` must be installed for that to work. I committed the finished dist folder to the repo so you don't have to do that if you don't want to.
 
 ## Running
+I run this on Node 12.1.0. 
+
 It can be started by running `node ./dist/server.js`. You can specify the port using `PORT=8080 node ./dist/server.js` or you can also make a .env file in the root directory and then run `node -r dotenv/config ./dist/server.js`.  I run it using [forever](https://www.npmjs.com/package/forever) because I've probably left something broken in it and it will probably need to restart at some point.
 
 ## Features
