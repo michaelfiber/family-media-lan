@@ -1,6 +1,6 @@
 {
   "name": "family-media-lan",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "LAN based browser music player with central parental controls, gameshow buzzer, and video chat.",
   "main": "dist/server.js",
   "scripts": {
