@@ -16,7 +16,7 @@
     "express-fileupload": "^1.1.9",
     "peer": "^0.5.3",
     "pug": "^2.0.4",
-    "socket.io": "^2.3.0",
+    "socket.io": "^2.5.0",
     "uuid": "^7.0.3"
   },
   "devDependencies": {
